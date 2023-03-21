@@ -20,5 +20,3 @@ type cases = [
 
 // ============= Your Code Here =============
 type IsUnion<T, K = T> = [T] extends [never] ? false : T extends T ? [K] extends [T] ? false : true : never;
-
-type A = string | number extends string ? true : false
