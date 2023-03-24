@@ -25,6 +25,15 @@ type cases = [
 ];
 
 // ============= Your Code Here =============
-type Combination<T extends string[], U = T[number], U1 = U> = U extends string ? U | `${U} ${Combination<[], Exclude<U1, U>>}` : never
+type Combination<T extends string[], U = T[number], U1 = U> = U extends string
+  ? `${U} ${Combination<[], Exclude<U1, U>>}` | `${U}`
+  : never;
 
-type c = Combination<["foo", "bar", "baz"]>;
+type Combination2<T extends string[], U extends string = T[number], U1 extends string = U> = [
+  U
+] extends [never]
+  ? ""
+  : U extends U
+  ? `${U} ${Combination2<[], Exclude<U1, U>>}`
+  : "";
+type c = Combination2<["foo", "bar", "baz"]>;
