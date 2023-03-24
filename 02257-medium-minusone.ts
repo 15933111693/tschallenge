@@ -13,4 +13,5 @@ type cases = [
 
 
 // ============= Your Code Here =============
-type MinusOne<T extends number>;
+type Gen<N extends number, Arr extends any[] = []> = Arr['length'] extends N ? Arr : Gen<N, [...Arr, 0]>;
+type MinusOne<T extends number, A extends any[] = Gen<T>> = A extends [infer F, ...infer R] ? R['length'] : 0;
