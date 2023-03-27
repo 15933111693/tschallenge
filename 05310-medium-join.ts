@@ -9,8 +9,8 @@ type cases = [
 ];
 
 // ============= Your Code Here =============
-type Join<T, U> = T extends [infer F]
+type Join<T extends string[], U extends number | string> = T extends [infer F extends string]
   ? `${F}`
-  : T extends [infer F, ...infer R]
+  : T extends [infer F extends string, ...infer R extends string[]]
   ? `${F}${U}${Join<R, U>}`
   : never;

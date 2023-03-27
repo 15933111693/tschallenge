@@ -36,4 +36,3 @@ type Combination2<T extends string[], U extends string = T[number], U1 extends s
   : U extends U
   ? `${U} ${Combination2<[], Exclude<U1, U>>}`
   : "";
-type c = Combination2<["foo", "bar", "baz"]>;
