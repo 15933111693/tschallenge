@@ -34,6 +34,3 @@ type SS = Equal<Merge<Foo, Bar>, {
   b: number
   c: boolean
 }>
-
-let a: Merge<Foo, Bar> = {
-}
