@@ -39,16 +39,11 @@ SimpleVue({
 
 // ============= Your Code Here =============
 declare function SimpleVue<
-  D extends { [key: string]: unknown },
-  C extends { [key: PropertyKey]: unknown },
-  M extends { [key: PropertyKey]: () => unknown }
->(
-  options: {
-    data: () => D;
-    computed: C & ThisType<D>;
-    methods: M &
-      ThisType<
-        M & D & { [K in keyof C]: C[K] extends () => infer RT ? RT : never }
-      >;
-  } & ThisType<never>
-): any;
+  T extends { [key: PropertyKey]: unknown },
+  U extends { [key: string]: () => unknown },
+  V extends { [key: string]: () => unknown }
+>(options: {
+  data: () => T;
+  computed: U & ThisType<T>;
+  methods: V & ThisType<T & V & { [K in keyof U]: U[K] extends () => infer R ? R : never }>;
+} & ThisType<never>): any;

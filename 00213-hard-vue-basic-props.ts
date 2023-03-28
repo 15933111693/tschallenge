@@ -61,7 +61,6 @@ VueBasicProps({
 });
 
 // ============= Your Code Here =============
-type ArrayToBase<T> = T extends unknown[] ? ToBase<T[number]> : ToBase<T>;
 type ToBase<T> = T extends StringConstructor
   ? string
   : T extends NumberConstructor
@@ -70,29 +69,26 @@ type ToBase<T> = T extends StringConstructor
   ? boolean
   : T extends RegExpConstructor
   ? RegExp
-  : T extends new (...args: any[]) => infer R
-  ? R
-  : T;
-
-type ParseProps<T> = ToBase<{
-  [K in keyof T]: {} extends T[K] ? any : 'type' extends keyof T[K] ? ArrayToBase<T[K]['type']> : ArrayToBase<T[K]>;
-}>;
+  : T extends new () => infer RT
+  ? RT
+  : never;
+type ArrToBase<T> = T extends unknown[] ? ToBase<T[number]> : ToBase<T>;
+type ParseProp<T> = {
+  [K in keyof T]: {} extends T[K]
+    ? any
+    : T[K] extends { type: unknown }
+    ? ArrToBase<T[K]["type"]>
+    : ArrToBase<T[K]>;
+};
 declare function VueBasicProps<
-  P extends { [key: string]: unknown | { type: unknown } },
+  P extends { [key: string]: unknown },
   D extends { [key: string]: unknown },
-  C extends { [key: PropertyKey]: unknown },
-  M extends { [key: PropertyKey]: () => unknown }
->(
-  options: {
-    props: P;
-    data: (this: ParseProps<P>) => D;
-    computed: C & ThisType<D>;
-    methods: M &
-      ThisType<
-        M &
-          D & {
-            [K in keyof C]: C[K] extends () => infer RT ? RT : never;
-          } & ParseProps<P>
-      >;
-  } & ThisType<never>
-): any;
+  C extends { [key: string]: () => unknown },
+  M extends { [key: string]: () => unknown }
+>(options: {
+  props: P;
+  data: (this: ParseProp<P>) => D;
+  computed: C & ThisType<D & P>;
+  methods: M &
+    ThisType<ParseProp<P> & D & { [K in keyof C]: ReturnType<C[K]> } & M>;
+} & ThisType<never>): any;
