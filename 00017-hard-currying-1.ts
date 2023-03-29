@@ -35,9 +35,7 @@ type cases = [
 ];
 
 // ============= Your Code Here =============
-type Gen<T extends () => any> = T extends (
-  ...args: [infer F, ...infer R]
-) => infer Re
+type Gen<T> = T extends (...args: [infer F, ...infer R]) => infer Re
   ? R extends []
     ? T
     : (arg: F) => Gen<(...args: R) => Re>
